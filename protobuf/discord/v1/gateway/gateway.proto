@@ -1,0 +1,83 @@
+
+syntax = "proto3";
+
+package pylon.discord.v1.gateway;
+option java_package = "bot.pylon.proto.lib.v1.gateway";
+option java_multiple_files = true;
+option go_package =
+    "github.com/germanoeich/nirn/proto/lib/v1/gateway;gateway";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "lib/v1/model/model.proto";
+
+// UpdateVoiceState
+
+message UpdateVoiceStateRequest {
+  fixed64 guild_id = 1 [jstype = JS_STRING];
+  fixed64 channel_id = 2 [jstype = JS_STRING];
+  bool self_mute = 3;
+  bool self_deaf = 4;
+}
+
+message UpdateVoiceStateResponse {}
+
+// UpdateStatus
+
+message UpdateStatusRequest {
+  google.protobuf.UInt32Value shard_id = 1;
+
+  google.protobuf.Timestamp since = 2;
+  repeated ActivityData activities = 3;
+  pylon.discord.v1.model.PresenceData.OnlineStatus status = 4;
+  bool afk = 5;
+
+  message ActivityData {
+    string name = 1;
+    pylon.discord.v1.model.PresenceData.PresenceActivityData.ActivityType type = 2;
+  }
+}
+
+message UpdateStatusResponse {}
+
+// FindUser
+
+message FindUserRequest {
+  fixed64 user_id = 1 [jstype = JS_STRING];
+}
+
+message FindUserResponse {
+  pylon.discord.v1.model.UserData user = 1;
+}
+
+// FindUserMutualGuilds
+
+message GetUserMutualGuildsRequest {
+  fixed64 user_id = 1 [jstype = JS_STRING];
+}
+
+message GetUserMutualGuildsResponse {
+  repeated pylon.discord.v1.model.GuildData guilds = 1;
+}
+
+// FindEmoji
+
+message FindEmojiRequest {
+  fixed64 emoji_id = 1 [jstype = JS_STRING];
+}
+
+message FindEmojiResponse {
+  pylon.discord.v1.model.EmojiData emoji = 1;
+}
+
+// GetStats
+
+message GetStatsRequest {}
+
+message GetStatsResponse {
+  uint64 guild_count = 1 [jstype = JS_STRING];
+  uint64 user_count = 2 [jstype = JS_STRING];
+  uint64 member_count = 3 [jstype = JS_STRING];
+  uint64 connected_channels = 4 [jstype = JS_STRING];
+  uint32 shard_count = 5;
+}

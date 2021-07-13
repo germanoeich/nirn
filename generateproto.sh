@@ -1,0 +1,1 @@
+protoc --proto_path=./protobuf --go_out=./proto --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative protobuf/discord/v1/*/*.proto

@@ -1,0 +1,508 @@
+syntax = "proto3";
+
+package pylon.discord.v1.event;
+option java_package = "bot.pylon.proto.lib.v1.event";
+option java_multiple_files = true;
+option go_package = "github.com/germanoeich/nirn/proto/lib/v1/event;event";
+import "lib/v1/model/model.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+message EventEnvelope {
+  HeaderData header = 1;
+
+  oneof event_data {
+    GuildCreateEvent guild_create_event = 2;
+    GuildUpdateEvent guild_update_event = 3;
+    GuildDeleteEvent guild_delete_event = 4;
+    PresenceUpdateEvent presence_update_event = 5;
+    GuildMemberAddEvent guild_member_add_event = 6;
+    GuildMemberUpdateEvent guild_member_update_event = 7;
+    GuildMemberRemoveEvent guild_member_remove_event = 8;
+    ChannelCreateEvent channel_create_event = 9;
+    ChannelUpdateEvent channel_update_event = 10;
+    ChannelDeleteEvent channel_delete_event = 11;
+    ChannelPinsUpdateEvent channel_pins_update_event = 12;
+    GuildRoleCreateEvent guild_role_create_event = 13;
+    GuildRoleUpdateEvent guild_role_update_event = 14;
+    GuildRoleDeleteEvent guild_role_delete_event = 15;
+    MessageCreateEvent message_create_event = 16;
+    MessageUpdateEvent message_update_event = 17;
+    MessageDeleteEvent message_delete_event = 18;
+    MessageDeleteBulkEvent message_delete_bulk_event = 19;
+    MessageReactionAddEvent message_reaction_add_event = 20;
+    MessageReactionRemoveEvent message_reaction_remove_event = 21;
+    MessageReactionRemoveAllEvent message_reaction_remove_all_event = 22;
+    MessageReactionRemoveEmojiEvent message_reaction_remove_emoji_event = 23;
+    TypingStartEvent typing_start_event = 24;
+    VoiceStateUpdateEvent voice_state_update_event = 25;
+    VoiceServerUpdateEvent voice_server_update_event = 26;
+    InviteCreateEvent invite_create_event = 27;
+    InviteDeleteEvent invite_delete_event = 28;
+    GuildBanAddEvent guild_ban_add_event = 29;
+    GuildBanRemoveEvent guild_ban_remove_event = 30;
+    GuildEmojisUpdateEvent guild_emojis_update_event = 31;
+    GuildIntegrationsUpdateEvent guild_integrations_update_event = 32;
+    WebhooksUpdateEvent webhooks_update_event = 33;
+    IntegrationCreateEvent integration_create_event = 34;
+    IntegrationUpdateEvent integration_update_event = 35;
+    IntegrationDeleteEvent integration_delete_event = 36;
+    InteractionCreateEvent interaction_create_event = 37;
+    ReadyEvent ready_event = 38;
+    ResumeEvent resume_event = 39;
+  }
+
+  message HeaderData {
+    uint64 seq = 1;
+    google.protobuf.Timestamp received_at = 2;
+  }
+}
+
+message EventEnvelopeAck {
+  uint64 seq = 1;
+}
+
+message EventScope {
+  fixed64 bot_id = 1 [jstype = JS_STRING];
+  fixed64 guild_id = 2 [jstype = JS_STRING];
+}
+
+message ReadyEvent {
+  EventScope scope = 1;
+}
+
+message ResumeEvent {
+  EventScope scope = 1;
+}
+
+message GuildCreateEvent {
+  EventScope scope = 1;
+  pylon.discord.v1.model.GuildData payload = 2;
+}
+
+message GuildUpdateEvent {
+  EventScope scope = 1;
+  pylon.discord.v1.model.GuildData payload = 2;
+  pylon.discord.v1.model.GuildData previously_cached = 3;
+}
+
+message GuildDeleteEvent {
+  EventScope scope = 1;
+  pylon.discord.v1.model.GuildData payload = 2;
+}
+
+message PresenceUpdateEvent {
+  EventScope scope = 1;
+  pylon.discord.v1.model.PresenceData payload = 2;
+  pylon.discord.v1.model.PresenceData previously_cached = 3;
+}
+
+message GuildMemberAddEvent {
+  EventScope scope = 1;
+  pylon.discord.v1.model.MemberData payload = 2;
+}
+
+message GuildMemberUpdateEvent {
+  EventScope scope = 1;
+  pylon.discord.v1.model.MemberData payload = 2;
+  pylon.discord.v1.model.MemberData previously_cached = 3;
+}
+
+message GuildMemberRemoveEvent {
+  EventScope scope = 1;
+  pylon.discord.v1.model.MemberData payload = 2;
+}
+
+message ChannelCreateEvent {
+  EventScope scope = 1;
+  pylon.discord.v1.model.ChannelData payload = 2;
+}
+
+message ChannelUpdateEvent {
+  EventScope scope = 1;
+  pylon.discord.v1.model.ChannelData payload = 2;
+  pylon.discord.v1.model.ChannelData previously_cached = 3;
+}
+
+message ChannelDeleteEvent {
+  EventScope scope = 1;
+  pylon.discord.v1.model.ChannelData payload = 2;
+}
+
+message ChannelPinsUpdateEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+
+  message PayloadData {
+    fixed64 channel_id = 1 [jstype = JS_STRING];
+    fixed64 guild_id = 2 [jstype = JS_STRING];
+    google.protobuf.Timestamp last_pin_timestamp = 3;
+  }
+}
+
+message GuildRoleCreateEvent {
+  EventScope scope = 1;
+  pylon.discord.v1.model.RoleData payload = 2;
+}
+
+message GuildRoleUpdateEvent {
+  EventScope scope = 1;
+  pylon.discord.v1.model.RoleData payload = 2;
+  pylon.discord.v1.model.RoleData previously_cached = 3;
+}
+
+message GuildRoleDeleteEvent {
+  EventScope scope = 1;
+  pylon.discord.v1.model.RoleData payload = 2;
+}
+
+message MessageCreateEvent {
+  EventScope scope = 1;
+  pylon.discord.v1.model.MessageData message_data = 2;
+}
+
+message MessageUpdateEvent {
+  EventScope scope = 1;
+  oneof payload {
+    pylon.discord.v1.model.MessageData cached = 2;
+    PayloadData raw = 4;
+  };
+  pylon.discord.v1.model.MessageData previously_cached = 3;
+
+  message PayloadData {
+    fixed64 id = 1 [jstype = JS_STRING];
+    fixed64 channel_id = 2 [jstype = JS_STRING];
+    pylon.discord.v1.model.SnowflakeValue guild_id = 3;
+    google.protobuf.StringValue content = 4;
+    google.protobuf.Timestamp edited_timestamp = 5;
+    pylon.discord.v1.model.SnowflakeListValue mention_roles = 6;
+    google.protobuf.BoolValue tts = 7;
+    google.protobuf.BoolValue mention_everyone = 8;
+    MessageAttachmentListValue attachments = 9;
+    MessageEmbedListValue embeds = 10;
+    MessageMentionListValue mentions = 11;
+    MessageReactionListValue reactions = 12;
+    google.protobuf.BoolValue pinned = 13;
+    MessageTypeValue type = 14;
+    MessageMentionChannelListValue mention_channels = 15;
+    google.protobuf.UInt32Value flags = 16;
+    MessageActivityValue activity = 17;
+    MessageApplicationValue application = 18;
+    MessageReferenceValue message_reference = 19;
+    MessageAuthorValue author = 20;
+    MessageMemberValue member = 21;
+    pylon.discord.v1.model.SnowflakeValue webhook_id = 22;
+
+    message MessageAttachmentListValue {
+      repeated pylon.discord.v1.model.MessageData.MessageAttachmentData values = 1;
+    }
+
+    message MessageEmbedListValue {
+      repeated pylon.discord.v1.model.MessageData.MessageEmbedData values = 1;
+    }
+
+    message MessageMentionListValue {
+      repeated pylon.discord.v1.model.MessageData.MessageMentionData values = 1;
+    }
+
+    message MessageReactionListValue {
+      repeated pylon.discord.v1.model.MessageData.MessageReactionData values = 1;
+    }
+
+    message MessageTypeValue {
+      pylon.discord.v1.model.MessageData.MessageType value = 1;
+    }
+
+    message MessageMentionChannelListValue {
+      repeated pylon.discord.v1.model.MessageData.MessageMentionChannelData values = 1;
+    }
+
+    message MessageActivityValue {
+      pylon.discord.v1.model.MessageData.MessageActivityData value = 1;
+    }
+
+    message MessageApplicationValue {
+      pylon.discord.v1.model.MessageData.MessageApplicationData value = 1;
+    }
+
+    message MessageReferenceValue {
+      pylon.discord.v1.model.MessageData.MessageReferenceData value = 1;
+    }
+
+    message MessageAuthorValue {
+      pylon.discord.v1.model.UserData value = 1;
+    }
+
+    message MessageMemberValue {
+      pylon.discord.v1.model.MemberData value = 1;
+    }
+  }
+}
+
+message MessageDeleteEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+  pylon.discord.v1.model.MessageData previously_cached = 3;
+
+  message PayloadData {
+    fixed64 id = 1 [jstype = JS_STRING];
+    fixed64 channel_id = 2 [jstype = JS_STRING];
+    fixed64 guild_id = 3 [jstype = JS_STRING];
+  }
+}
+
+message MessageDeleteBulkEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+
+  message PayloadData {
+    repeated fixed64 ids = 1 [jstype = JS_STRING];
+    fixed64 channel_id = 2;
+    fixed64 guild_id = 3;
+  }
+}
+
+message MessageReactionAddEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+
+  message PayloadData {
+    fixed64 user_id = 1 [jstype = JS_STRING];
+    fixed64 channel_id = 2 [jstype = JS_STRING];
+    fixed64 message_id = 3 [jstype = JS_STRING];
+    fixed64 guild_id = 4 [jstype = JS_STRING];
+
+    pylon.discord.v1.model.MessageData.MessageReactionEmojiData emoji = 6;
+  }
+}
+
+message MessageReactionRemoveEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+
+  message PayloadData {
+    fixed64 user_id = 1 [jstype = JS_STRING];
+    fixed64 channel_id = 2 [jstype = JS_STRING];
+    fixed64 message_id = 3 [jstype = JS_STRING];
+    fixed64 guild_id = 4 [jstype = JS_STRING];
+    pylon.discord.v1.model.MessageData.MessageReactionEmojiData emoji = 5;
+  }
+}
+
+message MessageReactionRemoveAllEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+
+  message PayloadData {
+    fixed64 channel_id = 1 [jstype = JS_STRING];
+    fixed64 message_id = 2 [jstype = JS_STRING];
+    fixed64 guild_id = 3 [jstype = JS_STRING];
+  }
+}
+
+message MessageReactionRemoveEmojiEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+
+  message PayloadData {
+    fixed64 channel_id = 1 [jstype = JS_STRING];
+    fixed64 message_id = 2 [jstype = JS_STRING];
+    fixed64 guild_id = 3 [jstype = JS_STRING];
+    pylon.discord.v1.model.MessageData.MessageReactionEmojiData emoji = 4;
+  }
+}
+
+message TypingStartEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+
+  message PayloadData {
+    fixed64 channel_id = 1 [jstype = JS_STRING];
+    fixed64 user_id = 2 [jstype = JS_STRING];
+    google.protobuf.Timestamp timestamp = 3;
+    pylon.discord.v1.model.MemberData member = 4;
+  }
+}
+
+message VoiceStateUpdateEvent {
+  EventScope scope = 1;
+  pylon.discord.v1.model.VoiceStateData payload = 2;
+  pylon.discord.v1.model.VoiceStateData previously_cached = 3;
+}
+
+message VoiceServerUpdateEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+
+  message PayloadData {
+    fixed64 guild_id = 1 [jstype = JS_STRING];
+    string token = 2;
+    string endpoint = 3;
+  }
+}
+
+message InviteCreateEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+
+  message PayloadData {
+    fixed64 channel_id = 1 [jstype = JS_STRING];
+    string code = 2;
+    google.protobuf.Timestamp created_at = 3;
+    pylon.discord.v1.model.SnowflakeValue guild_id = 4;
+    pylon.discord.v1.model.UserData inviter = 5;
+    uint64 max_age = 6;
+    uint64 max_uses = 7;
+    pylon.discord.v1.model.UserData target_user = 8;
+    pylon.discord.v1.model.InviteData.InviteTargetUserType target_user_type = 9;
+    bool temporary = 10;
+    uint64 uses = 11;
+  }
+}
+
+message InviteDeleteEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+
+  message PayloadData {
+    fixed64 guild_id = 1 [jstype = JS_STRING];
+    fixed64 channel_id = 2 [jstype = JS_STRING];
+    string code = 3;
+  }
+}
+
+message GuildBanAddEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+
+  message PayloadData {
+    fixed64 guild_id = 1 [jstype = JS_STRING];
+    pylon.discord.v1.model.UserData user = 2;
+  }
+}
+
+message GuildBanRemoveEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+
+  message PayloadData {
+    fixed64 guild_id = 1 [jstype = JS_STRING];
+    pylon.discord.v1.model.UserData user = 2;
+  }
+}
+
+message GuildEmojisUpdateEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+  PayloadData previously_cached = 3;
+
+  message PayloadData {
+    fixed64 guild_id = 1 [jstype = JS_STRING];
+    repeated pylon.discord.v1.model.EmojiData emojis = 2;
+  }
+}
+
+message GuildIntegrationsUpdateEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+
+  message PayloadData {
+    fixed64 guild_id = 1 [jstype = JS_STRING];
+  }
+}
+
+message WebhooksUpdateEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+
+  message PayloadData {
+    fixed64 guild_id = 1 [jstype = JS_STRING];
+  }
+}
+
+message IntegrationCreateEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+
+  message PayloadData {
+    fixed64 guild_id = 1 [jstype = JS_STRING];
+  }
+}
+
+message IntegrationUpdateEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+
+  message PayloadData {
+    fixed64 guild_id = 1 [jstype = JS_STRING];
+  }
+}
+
+message IntegrationDeleteEvent {
+  EventScope scope = 1;
+  PayloadData payload = 2;
+
+  message PayloadData {
+    fixed64 guild_id = 1 [jstype = JS_STRING];
+  }
+}
+
+message InteractionCreateEvent {
+  EventScope scope = 1;
+  discord.v1.model.MessageData.MessageInteractionData.MessageInteractionType type = 2;
+  oneof payload {
+    InteractionCreatePingEvent ping = 3;
+    InteractionCreateApplicationCommandEvent command = 4;
+    InteractionCreateMessageComponentEvent component = 5;
+  }
+
+  message InteractionCreatePingEvent {
+    InteractionCreateBasePayload base = 1;
+  }
+
+  message InteractionCreateApplicationCommandEvent {
+    InteractionCreateBasePayload base = 1;
+    discord.v1.model.InteractionDataApplicationCommand data = 2;
+  }
+
+  message InteractionCreateMessageComponentEvent {
+    InteractionCreateBasePayload base = 1;
+    discord.v1.model.MessageData message = 2;
+    discord.v1.model.InteractionDataMessageComponent data = 3;
+  }
+
+  message InteractionCreateBasePayload {
+    fixed64 id = 1 [jstype = JS_STRING];
+    fixed64 application_id = 2 [jstype = JS_STRING];
+    discord.v1.model.MessageData.MessageInteractionData.MessageInteractionType type = 3; // dupe, but its there for UX
+    fixed64 channel_id = 4 [jstype = JS_STRING];
+    string token = 5;
+    uint32 version = 6;
+    InteractionCreateBasePayloadType source_type = 7;
+    oneof source_data {
+      InteractionCreateBasePayloadGuildData source_guild = 8;
+      InteractionCreateBasePayloadDmData source_dm = 9;
+    }
+  }
+
+  message InteractionCreateBasePayloadGuildData {
+    fixed64 guild_id = 1 [jstype = JS_STRING];
+    discord.v1.model.MemberData member = 2;
+  }
+
+  message InteractionCreateBasePayloadDmData {
+    discord.v1.model.UserData user = 1;
+  }
+
+  enum InteractionCreateBasePayloadType {
+    UNKNOWN = 0;
+    GUILD = 1;
+    DM = 2;
+  }
+}
+
+message EventResponse {}
+
+message InteractionResponse {
+  discord.v1.model.InteractionResponse response = 1;
+}

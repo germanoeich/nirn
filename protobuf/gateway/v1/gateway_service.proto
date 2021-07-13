@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package pylon.gateway.v1.service;
+option java_package = "bot.pylon.proto.gateway.v1.service";
+option java_multiple_files = true;
+option go_package =
+    "github.com/germanoeich/nirn/proto/lib/v1/service;service";
+
+import "lib/v1/gateway/gateway.proto";
+
+service Gateway {
+  rpc UpdateVoiceState(pylon.discord.v1.gateway.UpdateVoiceStateRequest)
+      returns (pylon.discord.v1.gateway.UpdateVoiceStateResponse);
+  rpc UpdateStatus(pylon.discord.v1.gateway.UpdateStatusRequest)
+      returns (pylon.discord.v1.gateway.UpdateStatusResponse);
+  rpc FindUser(pylon.discord.v1.gateway.FindUserRequest)
+      returns (pylon.discord.v1.gateway.FindUserResponse);
+  rpc FindUserMutualGuilds(pylon.discord.v1.gateway.GetUserMutualGuildsRequest)
+      returns (pylon.discord.v1.gateway.GetUserMutualGuildsResponse);
+  rpc FindEmoji(pylon.discord.v1.gateway.FindEmojiRequest)
+      returns (pylon.discord.v1.gateway.FindEmojiResponse);
+  rpc GetStats(pylon.discord.v1.gateway.GetStatsRequest)
+      returns (pylon.discord.v1.gateway.GetStatsResponse);
+}
